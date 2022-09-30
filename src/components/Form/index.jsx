@@ -9,13 +9,24 @@ const DEFAULT_FORM_STATE = {
 
 export const Form = () => {
   const [userInputs, setUserInputs] = useState(DEFAULT_FORM_STATE)
-  const [nameTouched, setNameTouched] = useState(false)
+  const [inputTouched, setInputTouched] = useState({
+    name: false,
+    email: false,
+  })
 
   const inputNameValid = userInputs.name.trim() !== ''
-  const isInputNameValid = inputNameValid || !nameTouched
+  const isInputNameValid = inputNameValid || !inputTouched.name
+
+  const inputEmailValid = userInputs.email.includes('@')
+  const isInputEmailValid = inputEmailValid || !inputTouched.email
 
   const nameChangeHandler = (evt) => {
-    setNameTouched(false)
+    setInputTouched((prevState) => {
+      return {
+        ...prevState,
+        name: false,
+      }
+    })
     setUserInputs((prevState) => {
       return {
         ...prevState,
@@ -24,8 +35,22 @@ export const Form = () => {
     })
   }
 
-  const inputTouchedHandler = () => {
-    setNameTouched(true)
+  const inputNameTouchedHandler = () => {
+    setInputTouched((prevState) => {
+      return {
+        ...prevState,
+        name: true,
+      }
+    })
+  }
+
+  const inputEmailTouchedHandler = () => {
+    setInputTouched((prevState) => {
+      return {
+        ...prevState,
+        email: true,
+      }
+    })
   }
 
   const emailChangeHandler = (evt) => {
@@ -36,6 +61,7 @@ export const Form = () => {
       }
     })
   }
+
   const submitFormHandler = (evt) => {
     evt.preventDefault()
     const { name, email } = userInputs
@@ -57,7 +83,7 @@ export const Form = () => {
         id="name"
         type="text"
         value={userInputs.name}
-        onBlur={inputTouchedHandler}
+        onBlur={inputNameTouchedHandler}
         onChange={nameChangeHandler}
       />
       {!isInputNameValid && <p className={invalid__text}>Name must not be empty</p>}
@@ -65,13 +91,14 @@ export const Form = () => {
         Your Email
       </label>
       <input
-        className={input}
+        className={isInputEmailValid ? input : `${input} ${invalid__input}`}
         id="email"
         type="text"
         value={userInputs.email}
-        onBlur={inputTouchedHandler}
+        onBlur={inputEmailTouchedHandler}
         onChange={emailChangeHandler}
       />
+      {!isInputEmailValid && <p className={invalid__text}>Provide a valid email</p>}
       <button className={button}>Submit</button>
     </form>
   )
