@@ -1,13 +1,17 @@
-import './styles.module.css'
+import { form, input, button, label } from './styles.module.css'
 
 export const Form = () => {
   return (
-    <form>
-      <label htmlFor="name">Your Name</label>
-      <input id="name" type="text" />
-      <label htmlFor="email">Your Email</label>
-      <input id="email" type="text" />
-      <button>Submit</button>
+    <form className={form}>
+      <label className={label} htmlFor="name">
+        Your Name
+      </label>
+      <input className={input} id="name" type="text" />
+      <label className={label} htmlFor="email">
+        Your Email
+      </label>
+      <input className={input} id="email" type="text" />
+      <button className={button}>Submit</button>
     </form>
   )
 }
