@@ -28,9 +28,14 @@
   padding: 1rem;
   border-radius: 4px;
   border: none;
-  background: rgb(172, 171, 171);
+  background: gray;
   color: white;
   cursor: pointer;
+}
+
+.button__disabled {
+  background-color: rgb(172, 171, 171);
+  cursor: not-allowed;
 }
 
 .invalid__input {

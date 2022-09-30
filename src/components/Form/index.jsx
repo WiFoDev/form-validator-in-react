@@ -1,6 +1,14 @@
 import { useState } from 'react'
 
-import { form, input, button, label, invalid__input, invalid__text } from './styles.module.css'
+import {
+  form,
+  input,
+  button,
+  label,
+  invalid__input,
+  invalid__text,
+  button__disabled,
+} from './styles.module.css'
 
 const DEFAULT_FORM_STATE = {
   name: '',
@@ -19,6 +27,8 @@ export const Form = () => {
 
   const inputEmailValid = userInputs.email.includes('@')
   const isInputEmailValid = inputEmailValid || !inputTouched.email
+
+  const isFormValid = inputNameValid && inputEmailValid
 
   const nameChangeHandler = (evt) => {
     setInputTouched((prevState) => {
@@ -65,12 +75,20 @@ export const Form = () => {
   const submitFormHandler = (evt) => {
     evt.preventDefault()
     const { name, email } = userInputs
+
+    if (!isFormValid) return
+
     const newUser = {
       name,
       email,
     }
 
+    console.log(newUser)
     setUserInputs(DEFAULT_FORM_STATE)
+    setInputTouched({
+      name: false,
+      email: false,
+    })
   }
 
   return (
@@ -99,7 +117,12 @@ export const Form = () => {
         onChange={emailChangeHandler}
       />
       {!isInputEmailValid && <p className={invalid__text}>Provide a valid email</p>}
-      <button className={button}>Submit</button>
+      <button
+        className={isFormValid ? button : `${button} ${button__disabled}`}
+        disabled={!isFormValid}
+      >
+        Submit
+      </button>
     </form>
   )
 }
