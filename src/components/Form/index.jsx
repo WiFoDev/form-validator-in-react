@@ -9,14 +9,23 @@ const DEFAULT_FORM_STATE = {
 
 export const Form = () => {
   const [userInputs, setUserInputs] = useState(DEFAULT_FORM_STATE)
+  const [nameTouched, setNameTouched] = useState(false)
+
+  const inputNameValid = userInputs.name.trim() !== ''
+  const isInputNameValid = inputNameValid || !nameTouched
 
   const nameChangeHandler = (evt) => {
+    setNameTouched(false)
     setUserInputs((prevState) => {
       return {
         ...prevState,
         name: evt.target.value,
       }
     })
+  }
+
+  const inputTouchedHandler = () => {
+    setNameTouched(true)
   }
 
   const emailChangeHandler = (evt) => {
@@ -44,13 +53,14 @@ export const Form = () => {
         Your Name
       </label>
       <input
-        className={`${input} ${invalid__input}`}
+        className={isInputNameValid ? input : `${input} ${invalid__input}`}
         id="name"
         type="text"
         value={userInputs.name}
+        onBlur={inputTouchedHandler}
         onChange={nameChangeHandler}
       />
-      <p className={invalid__text}>Name must not be empty</p>
+      {!isInputNameValid && <p className={invalid__text}>Name must not be empty</p>}
       <label className={label} htmlFor="email">
         Your Email
       </label>
@@ -59,6 +69,7 @@ export const Form = () => {
         id="email"
         type="text"
         value={userInputs.email}
+        onBlur={inputTouchedHandler}
         onChange={emailChangeHandler}
       />
       <button className={button}>Submit</button>
