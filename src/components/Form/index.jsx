@@ -64,6 +64,12 @@ export const Form = () => {
   }
 
   const emailChangeHandler = (evt) => {
+    setInputTouched((prevState) => {
+      return {
+        ...prevState,
+        email: false,
+      }
+    })
     setUserInputs((prevState) => {
       return {
         ...prevState,
