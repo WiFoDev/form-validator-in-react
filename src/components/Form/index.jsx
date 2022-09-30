@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useInput } from '../../hooks/use-input'
 
 import {
   form,
@@ -10,91 +10,38 @@ import {
   button__disabled,
 } from './styles.module.css'
 
-const DEFAULT_FORM_STATE = {
-  name: '',
-  email: '',
-}
-
 export const Form = () => {
-  const [userInputs, setUserInputs] = useState(DEFAULT_FORM_STATE)
-  const [inputTouched, setInputTouched] = useState({
-    name: false,
-    email: false,
-  })
+  const {
+    value: inputName,
+    hasError: inputNameHasError,
+    valueChangeHandler: inputNameChangeHandler,
+    inputTouchedHandler: inputNameTouchedHandler,
+    reset: resetInputName,
+  } = useInput((value) => value.trim() !== '')
 
-  const inputNameValid = userInputs.name.trim() !== ''
-  const isInputNameValid = inputNameValid || !inputTouched.name
+  const {
+    value: inputEmail,
+    hasError: inputEmailHasError,
+    valueChangeHandler: inputEmailChangeHandler,
+    inputTouchedHandler: inputEmailTouchedHandler,
+    reset: resetInputEmail,
+  } = useInput((value) => value.includes('@'))
 
-  const inputEmailValid = userInputs.email.includes('@')
-  const isInputEmailValid = inputEmailValid || !inputTouched.email
-
-  const isFormValid = inputNameValid && inputEmailValid
-
-  const nameChangeHandler = (evt) => {
-    setInputTouched((prevState) => {
-      return {
-        ...prevState,
-        name: false,
-      }
-    })
-    setUserInputs((prevState) => {
-      return {
-        ...prevState,
-        name: evt.target.value,
-      }
-    })
-  }
-
-  const inputNameTouchedHandler = () => {
-    setInputTouched((prevState) => {
-      return {
-        ...prevState,
-        name: true,
-      }
-    })
-  }
-
-  const inputEmailTouchedHandler = () => {
-    setInputTouched((prevState) => {
-      return {
-        ...prevState,
-        email: true,
-      }
-    })
-  }
-
-  const emailChangeHandler = (evt) => {
-    setInputTouched((prevState) => {
-      return {
-        ...prevState,
-        email: false,
-      }
-    })
-    setUserInputs((prevState) => {
-      return {
-        ...prevState,
-        email: evt.target.value,
-      }
-    })
-  }
+  const isFormValid = !inputNameHasError && !inputEmailHasError
 
   const submitFormHandler = (evt) => {
     evt.preventDefault()
-    const { name, email } = userInputs
 
     if (!isFormValid) return
 
     const newUser = {
-      name,
-      email,
+      inputName,
+      inputEmail,
     }
 
     console.log(newUser)
-    setUserInputs(DEFAULT_FORM_STATE)
-    setInputTouched({
-      name: false,
-      email: false,
-    })
+    resetInputName()
+    resetInputEmail()
   }
 
   return (
@@ -103,26 +50,26 @@ export const Form = () => {
         Your Name
       </label>
       <input
-        className={isInputNameValid ? input : `${input} ${invalid__input}`}
+        className={!inputNameHasError ? input : `${input} ${invalid__input}`}
         id="name"
         type="text"
-        value={userInputs.name}
+        value={inputName}
         onBlur={inputNameTouchedHandler}
-        onChange={nameChangeHandler}
+        onChange={inputNameChangeHandler}
       />
-      {!isInputNameValid && <p className={invalid__text}>Name must not be empty</p>}
+      {inputNameHasError && <p className={invalid__text}>Name must not be empty</p>}
       <label className={label} htmlFor="email">
         Your Email
       </label>
       <input
-        className={isInputEmailValid ? input : `${input} ${invalid__input}`}
+        className={!inputEmailHasError ? input : `${input} ${invalid__input}`}
         id="email"
         type="text"
-        value={userInputs.email}
+        value={inputEmail}
         onBlur={inputEmailTouchedHandler}
-        onChange={emailChangeHandler}
+        onChange={inputEmailChangeHandler}
       />
-      {!isInputEmailValid && <p className={invalid__text}>Provide a valid email</p>}
+      {inputEmailHasError && <p className={invalid__text}>Provide a valid email</p>}
       <button
         className={isFormValid ? button : `${button} ${button__disabled}`}
         disabled={!isFormValid}
