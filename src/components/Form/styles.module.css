@@ -32,3 +32,13 @@
   color: white;
   cursor: pointer;
 }
+
+.invalid__input {
+  border-color: rgb(232, 2, 2);
+  background-color: rgb(253, 218, 218);
+}
+
+.invalid__text {
+  color: brown;
+  font-weight: 500;
+}

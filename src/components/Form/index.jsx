@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { form, input, button, label } from './styles.module.css'
+import { form, input, button, label, invalid__input, invalid__text } from './styles.module.css'
 
 const DEFAULT_FORM_STATE = {
   name: '',
@@ -44,12 +44,13 @@ export const Form = () => {
         Your Name
       </label>
       <input
-        className={input}
+        className={`${input} ${invalid__input}`}
         id="name"
         type="text"
         value={userInputs.name}
         onChange={nameChangeHandler}
       />
+      <p className={invalid__text}>Name must not be empty</p>
       <label className={label} htmlFor="email">
         Your Email
       </label>
